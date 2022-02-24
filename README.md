@@ -33,6 +33,46 @@ Example:
 font2bitmap -i "input.ttf" -o "output" -s 20 -c charset.utf8 -p 6 -t 0.33333
 ```
 
+## How to Clone?
+
+This library uses git submodules.
+
+You need to fetch the repo and the submodules also.
+
+### a) Clone With Single Command
+
+__HTTPS__
+
+```bash
+git clone --recurse-submodules https://github.com/A-Ribeiro/font2bitmap.git
+```
+
+__SSH__
+
+```bash
+git clone --recurse-submodules git@github.com:A-Ribeiro/font2bitmap.git
+```
+
+### b) Clone With Multiple Commands
+
+__HTTPS__
+
+```bash
+git clone https://github.com/A-Ribeiro/font2bitmap.git
+cd OpenGLStarter
+git submodule init
+git submodule update
+```
+
+__SSH__
+
+```bash
+git clone git@github.com:A-Ribeiro/font2bitmap.git
+cd OpenGLStarter
+git submodule init
+git submodule update
+```
+
 ## Related Links
 
 https://github.com/A-Ribeiro/aRibeiroCore
