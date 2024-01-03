@@ -5,7 +5,7 @@
 
 /build/
 /include/
-/libs/
+#/libs/
 
 ######################
 # OS generated files #
