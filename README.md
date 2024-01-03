@@ -59,7 +59,7 @@ __HTTPS__
 
 ```bash
 git clone https://github.com/A-Ribeiro/font2bitmap.git
-cd OpenGLStarter
+cd font2bitmap
 git submodule init
 git submodule update
 ```
@@ -68,7 +68,7 @@ __SSH__
 
 ```bash
 git clone git@github.com:A-Ribeiro/font2bitmap.git
-cd OpenGLStarter
+cd font2bitmap
 git submodule init
 git submodule update
 ```
