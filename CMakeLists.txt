@@ -58,15 +58,16 @@ target_link_libraries( ${PROJECT_NAME}
     ft2-wrapper
 )
 
-# copy_file_after_build(
-#     ${PROJECT_NAME} 
-#     resources/charset.utf8
-#     resources/mailrays.ttf
-#     resources/CreateFontWin32.bat
-#     resources/goudy_bookletter_1911.otf
-#     resources/Roboto-Light.ttf
-#     resources/Roboto-Regular.ttf
-# )
+tool_copy_file_after_build(
+    ${PROJECT_NAME} 
+    resources/charset.utf8
+    resources/mailrays.ttf
+    resources/CreateFontLinux.sh
+    resources/CreateFontWin32.bat
+    resources/goudy_bookletter_1911.otf
+    resources/Roboto-Light.ttf
+    resources/Roboto-Regular.ttf
+)
 
 if( NOT MSVC )
     install(
