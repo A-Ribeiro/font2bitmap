@@ -7,7 +7,7 @@ John 3:16
 
 ## Font tool: font2bitmap - OpenGL Font 2.0
 
-The command line tool __font2bitmap__ now generates the new format(Binary ASilva OpenGL Font, version 2.0 - basof2) and the old at the same time.
+The command line tool __font2bitmap__ now generates the new format(Binary ASilva OpenGL Font, version 2.0 - basof2).
 
 The input is any Freetype2 supported font format (.ttf, .otf, etc...).
 
