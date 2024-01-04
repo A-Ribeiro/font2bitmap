@@ -5,7 +5,9 @@
 
 /build/
 /include/
-/libs/
+#/libs/
+/libs/3rdparty
+
 
 ######################
 # OS generated files #

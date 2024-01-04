@@ -18,32 +18,28 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# avoid base libs overwrite
-option(ARIBEIRO_SKIP_INSTALL_CORE ON)
-option(ARIBEIRO_SKIP_INSTALL_PLATFORM ON)
-option(ARIBEIRO_SKIP_INSTALL_DATA ON)
+# reset global variables
+unset (CMAKE_MODULE_PATH CACHE)
+unset (CMAKE_PREFIX_PATH CACHE)
 
-include(cmake/include.cmake)
-include(cmake/libs/libaRibeiroCore.cmake)
-include(cmake/libs/libaRibeiroPlatform.cmake)
-include(cmake/libs/libaRibeiroData.cmake)
+add_subdirectory(libs/InteractiveToolkit "${CMAKE_BINARY_DIR}/lib/InteractiveToolkit")
+add_subdirectory(libs/InteractiveToolkit-Extension "${CMAKE_BINARY_DIR}/lib/InteractiveToolkit-Extension")
 
-include(cmake/libs/libconvertutf.cmake)
-include(cmake/libs/libfreetype.cmake)
-include(cmake/libs/aRibeiroWrappers.cmake)
-tool_include_lib(aRibeiroWrappers ft2-wrapper)
+# show info about the lib parameters
+find_package(InteractiveToolkit REQUIRED)
+
+if (NOT TARGET ft2-wrapper)
+    add_subdirectory(libs/InteractiveToolkit-Extension/wrappers/ft2-wrapper "${CMAKE_BINARY_DIR}/lib/ft2-wrapper")
+endif()
 
 FILE( GLOB HEADERS src/*.h )
 FILE( GLOB SRC src/*.cpp )
 
 if(WIN32)
     set( ADITIONAL_SRC src/win32/getopt.c src/win32/getopt.h )
-    set( ADITIONAL_DIR src/win32 )
-    
+    set( ADITIONAL_DIR src/win32 )    
     SOURCE_GROUP(win32 FILES win32/getopt.c win32/getopt.h)
 ENDIF()
-
-include_directories(${ADITIONAL_DIR})
 
 add_executable(${PROJECT_NAME}
         ${HEADERS}
@@ -54,26 +50,26 @@ add_executable(${PROJECT_NAME}
 # set the target's folder (for IDEs that support it, e.g. Visual Studio)
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "TOOLS")
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${ADITIONAL_DIR})
 # Linking libraries
-target_link_libraries( 
-    ${PROJECT_NAME}
-    convertutf freetype ft2-wrapper
-    aRibeiroCore aRibeiroPlatform aRibeiroData
+target_link_libraries( ${PROJECT_NAME} 
+    PUBLIC
+    InteractiveToolkit-Extension
+    ft2-wrapper
 )
 
-copy_file_after_build(
+tool_copy_file_after_build(
     ${PROJECT_NAME} 
     resources/charset.utf8
     resources/mailrays.ttf
+    resources/CreateFontLinux.sh
     resources/CreateFontWin32.bat
     resources/goudy_bookletter_1911.otf
     resources/Roboto-Light.ttf
     resources/Roboto-Regular.ttf
 )
 
-
 if( NOT MSVC )
-    # Install setup
     install(
         TARGETS ${PROJECT_NAME} 
         RUNTIME DESTINATION bin

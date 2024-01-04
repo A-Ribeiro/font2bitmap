@@ -1,3 +1,6 @@
-[submodule "cmake"]
-	path = cmake
-	url = https://github.com/A-Ribeiro/cmake.git
+[submodule "libs/InteractiveToolkit"]
+	path = libs/InteractiveToolkit
+	url = https://github.com/A-Ribeiro/InteractiveToolkit.git
+[submodule "libs/InteractiveToolkit-Extension"]
+	path = libs/InteractiveToolkit-Extension
+	url = https://github.com/A-Ribeiro/InteractiveToolkit-Extension.git
