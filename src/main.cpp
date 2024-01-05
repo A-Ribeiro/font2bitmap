@@ -31,7 +31,7 @@ std::u32string readUTF32fromFile(const char *filename)
         fseek(in, 0, SEEK_END);
         buffer.resize(ftell(in));
         fseek(in, 0, SEEK_SET);
-        int readed_size = (int)fread(buffer.data(), sizeof(uint8_t), buffer.size(), in);
+        int readed_size = (int)fread(&buffer[0], sizeof(uint8_t), buffer.size(), in);
         fclose(in);
     }
     return ITKCommon::StringUtil::utf8_to_utf32(buffer);
