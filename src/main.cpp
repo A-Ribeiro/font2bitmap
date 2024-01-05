@@ -1,4 +1,6 @@
-#include <InteractiveToolkit/InteractiveToolkit.h>
+// #include <InteractiveToolkit/InteractiveToolkit.h>
+#include <InteractiveToolkit/ITKCommon/ITKCommon.h>
+
 #include <InteractiveToolkit-Extension/InteractiveToolkit-Extension.h>
 #include <ITKWrappers/FT2.h>
 
