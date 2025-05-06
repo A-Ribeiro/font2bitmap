@@ -32,19 +32,25 @@ if (NOT TARGET ft2-wrapper)
     add_subdirectory(libs/InteractiveToolkit-Extension/wrappers/ft2-wrapper "${CMAKE_BINARY_DIR}/lib/ft2-wrapper")
 endif()
 
-FILE( GLOB HEADERS src/*.h )
-FILE( GLOB SRC src/*.cpp )
+FILE( GLOB HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.h)
+FILE( GLOB SRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.cpp)
 
 if(WIN32)
     set( ADITIONAL_SRC src/win32/getopt.c src/win32/getopt.h )
     set( ADITIONAL_DIR src/win32 )    
-    SOURCE_GROUP(win32 FILES win32/getopt.c win32/getopt.h)
-ENDIF()
+    # SOURCE_GROUP(win32 FILES win32/getopt.c win32/getopt.h)
+endif()
 
-add_executable(${PROJECT_NAME}
-        ${HEADERS}
-        ${SRC}
-        ${ADITIONAL_SRC}
+tool_define_source_group(
+    ${HEADERS}
+    ${SRC}
+    ${ADITIONAL_SRC}
+)
+
+add_executable( ${PROJECT_NAME}
+    ${HEADERS}
+    ${SRC}
+    ${ADITIONAL_SRC}
 )
 
 # set the target's folder (for IDEs that support it, e.g. Visual Studio)
@@ -58,6 +64,8 @@ target_link_libraries( ${PROJECT_NAME}
     ft2-wrapper
 )
 
+# tool_copy_directory_after_build( ${PROJECT_NAME} resources )
+
 tool_copy_file_after_build(
     ${PROJECT_NAME} 
     resources/charset.utf8
@@ -67,6 +75,7 @@ tool_copy_file_after_build(
     resources/goudy_bookletter_1911.otf
     resources/Roboto-Light.ttf
     resources/Roboto-Regular.ttf
+    resources/custom_chars.ini
 )
 
 if( NOT MSVC )
