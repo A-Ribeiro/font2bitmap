@@ -64,7 +64,7 @@ target_link_libraries( ${PROJECT_NAME}
     ft2-wrapper
 )
 
-# tool_copy_directory_after_build( ${PROJECT_NAME} resources )
+tool_copy_directory_after_build( ${PROJECT_NAME} resources )
 
 tool_copy_file_after_build(
     ${PROJECT_NAME} 
