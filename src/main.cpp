@@ -351,8 +351,8 @@ int main(int argc, char *argv[])
                             atlasElementFace->copyFromRGBABuffer((uint8_t *)rescaler.output_image.array, font_size.x * 4);
 
                             // auto* atlasElementStroke = atlas.addElement(UInt32toStringHEX(output_char_code) + std::string("s"), parameters.characterSize, parameters.characterSize);
-                            auto *atlasElementStroke = atlas.addElement(UInt32toStringHEX(output_char_code) + std::string("s"), 1, 1);
-                            atlasElementStroke->copyFromRGBABuffer((uint8_t *)blank_img.array, font_size.x * 4);
+                            auto *atlasElementStroke = atlas.addElement(UInt32toStringHEX(output_char_code) + std::string("s"), 0, 0);
+                            // atlasElementStroke->copyFromRGBABuffer((uint8_t *)blank_img.array, font_size.x * 4);
 
                             float advance_x = (float)rescaler.output_image.size.x * (float)x_advance_percent;
                             int16_t top_origin = (int16_t)((float)rescaler.output_image.size.y * (1.0f - (float)y_baseline_percent) + 0.5f);
