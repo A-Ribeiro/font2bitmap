@@ -45,7 +45,8 @@ std::u32string readUTF32fromFile(const char *filename)
 std::string charToUTF8_Cpp_Literal(char32_t char_code)
 {
     std::string result = "\"";
-    auto utf8_str = ITKCommon::StringUtil::utf32_to_utf8(std::u32string(U"") + char_code);
+    char32_t char_str[2] = {char_code,0};
+    auto utf8_str = ITKCommon::StringUtil::utf32_to_utf8(char_str);
     for (auto chr : utf8_str)
         result += ITKCommon::PrintfToStdString("\\x%.2x", (uint8_t)chr);
     result += "\"";
@@ -332,7 +333,7 @@ int main(int argc, char *argv[])
                             printf("    Reading char: %u (0x%.8x)\n", output_char_code, output_char_code);
                             printf("        const char* var = %s;\n", charToUTF8_Cpp_Literal((char32_t)output_char_code).c_str());
 
-                            all_chars_inserted += ITKCommon::PrintfToStdString("const char* %s = %s;\n",
+                            all_chars_inserted += ITKCommon::PrintfToStdString("#define  Font_%s %s\n",
                                                                                var_name,
                                                                                charToUTF8_Cpp_Literal((char32_t)output_char_code).c_str());
 
@@ -380,7 +381,12 @@ int main(int argc, char *argv[])
                         printf("    reading line with no valid content: %s\n", line);
                     }
 
-                    printf("All Chars Inserted:\n%s\n", all_chars_inserted.c_str());
+                    printf("\nAll Chars Inserted:\n\n"
+                        "//\n"
+                        "// Auto Generated: Exported Bitmaps inside the Font\n"
+                        "//\n"
+                        "%s\n\n"
+                        , all_chars_inserted.c_str());
                 }
             }
         }
