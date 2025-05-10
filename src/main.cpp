@@ -201,20 +201,32 @@ int main(int argc, char *argv[])
         fontWriter.initFromAtlas(&atlas, (float)parameters.characterSize, spaceWidth, newLineHeight);
 
         // generate all characters
-        char32_t max_1char = 0;
-        char32_t max_2chars = 0x80;
-        char32_t max_3chars = 0x800;
-        char32_t max_4chars = 0x10000;
+        int64_t max_1char = -1;
+        int64_t max_2chars = -1;
+        int64_t max_3chars = -1;
+        int64_t max_4chars = -1;
         for (int i = 0; i < utf32data.length(); i++)
         {
-            if (utf32data[i] < 0x80 && utf32data[i] > max_1char)
-                max_1char = utf32data[i];
-            else if (utf32data[i] < 0x800 && utf32data[i] > max_2chars)
-                max_2chars = utf32data[i];
-            else if (utf32data[i] < 0x10000 && utf32data[i] > max_3chars)
-                max_3chars = utf32data[i];
-            else if (utf32data[i] < 0x110000 && utf32data[i] > max_4chars)
-                max_4chars = utf32data[i];
+            if (utf32data[i] < 0x80)
+            {
+                if ((int64_t)utf32data[i] > max_1char)
+                    max_1char = (int64_t)utf32data[i];
+            }
+            else if (utf32data[i] < 0x800)
+            {
+                if ((int64_t)utf32data[i] > max_2chars)
+                    max_2chars = (int64_t)utf32data[i];
+            }
+            else if (utf32data[i] < 0x10000)
+            {
+                if ((int64_t)utf32data[i] > max_3chars)
+                    max_3chars = (int64_t)utf32data[i];
+            }
+            else if (utf32data[i] < 0x110000)
+            {
+                if ((int64_t)utf32data[i] > max_4chars)
+                    max_4chars = (int64_t)utf32data[i];
+            }
 
             if (utf32data[i] == U' ')
                 continue;
@@ -222,7 +234,7 @@ int main(int argc, char *argv[])
             auto *glyph = ft2.generateGlyph(utf32data[i]);
             if (glyph == NULL)
             {
-                printf("Glyph not found: %u [%8x]\n", (uint32_t)utf32data[i], (uint32_t)utf32data[i]);
+                printf("Glyph not found: %u [0x%.8x]\n", (uint32_t)utf32data[i], (uint32_t)utf32data[i]);
                 continue;
             }
 
@@ -253,12 +265,29 @@ int main(int argc, char *argv[])
             ft2.releaseGlyph(&glyph);
         }
 
+        if (max_1char < 0)
+            max_1char = 0;
+        else
+            max_1char = std::min<int64_t>(max_1char+1, 127);
+        if (max_2chars < 0)
+            max_2chars = 0x80;
+        else
+            max_2chars = std::min<int64_t>(max_2chars+1, 2047);
+        if (max_3chars < 0)
+            max_3chars = 0x800;
+        else
+            max_3chars = std::min<int64_t>(max_3chars+1, 65535);
+        if (max_4chars < 0)
+            max_4chars = 0x10000;
+        else
+            max_4chars = std::min<int64_t>(max_4chars+1, 1114111);
+
         // add custom character
         {
-            printf("Latest 1char (<128) used: %u [const char* var = %s;]\n", (uint32_t)max_1char, charToUTF8_Cpp_Literal(max_1char).c_str());
-            printf("Latest 2chars (<2048) used: %u [const char* var = %s;]\n", (uint32_t)max_2chars, charToUTF8_Cpp_Literal(max_2chars).c_str());
-            printf("Latest 3chars (<65536) used: %u [const char* var = %s;]\n", (uint32_t)max_3chars, charToUTF8_Cpp_Literal(max_3chars).c_str());
-            printf("Latest 4chars (<1114112) used: %u [const char* var = %s;]\n", (uint32_t)max_4chars, charToUTF8_Cpp_Literal(max_4chars).c_str());
+            printf("    1char (<128) starts from: %u [const char* var = %s;]\n", (uint32_t)max_1char, charToUTF8_Cpp_Literal((char32_t)max_1char).c_str());
+            printf("    2chars (<2048) starts from: %u [const char* var = %s;]\n", (uint32_t)max_2chars, charToUTF8_Cpp_Literal((char32_t)max_2chars).c_str());
+            printf("    3chars (<65536) starts from: %u [const char* var = %s;]\n", (uint32_t)max_3chars, charToUTF8_Cpp_Literal((char32_t)max_3chars).c_str());
+            printf("    4chars (<1114112) starts from: %u [const char* var = %s;]\n", (uint32_t)max_4chars, charToUTF8_Cpp_Literal((char32_t)max_4chars).c_str());
 
             if (parameters.a)
             {
@@ -275,6 +304,7 @@ int main(int argc, char *argv[])
                     double x_advance_percent;                 // = 1.0
                     double y_baseline_percent;                //= 0.5
                     uint32_t output_char_code;                //= 65536
+                    char var_name[1024] = "";
 
                     ITKCommon::Matrix<MathCore::vec4u8> blank_img(MathCore::vec2i(parameters.characterSize, parameters.characterSize));
                     blank_img.clear(MathCore::vec4u8(0));
@@ -293,14 +323,18 @@ int main(int argc, char *argv[])
                             sscanf(line, "height_scale_related_to_font_size=%lf", &height_scale_related_to_font_size) == 1 ||
                             sscanf(line, "x_start_percent=%lf", &x_start_percent) == 1 ||
                             sscanf(line, "x_advance_percent=%lf", &x_advance_percent) == 1 ||
-                            sscanf(line, "y_baseline_percent=%lf", &y_baseline_percent) == 1)
+                            sscanf(line, "y_baseline_percent=%lf", &y_baseline_percent) == 1 ||
+                            sscanf(line, "var_name=%s", &var_name) == 1)
                             continue;
                         else if (sscanf(line, "output_char_code=%u", &output_char_code) == 1)
                         {
 
                             printf("    Reading char: %u (0x%.8x)\n", output_char_code, output_char_code);
                             printf("        const char* var = %s;\n", charToUTF8_Cpp_Literal((char32_t)output_char_code).c_str());
-                            all_chars_inserted += ITKCommon::PrintfToStdString("const char* var = %s;\n", charToUTF8_Cpp_Literal((char32_t)output_char_code).c_str());
+
+                            all_chars_inserted += ITKCommon::PrintfToStdString("const char* %s = %s;\n",
+                                                                               var_name,
+                                                                               charToUTF8_Cpp_Literal((char32_t)output_char_code).c_str());
 
                             printf("        input_image: %s\n", input_image);
                             printf("        height_scale_related_to_font_size: %f\n", height_scale_related_to_font_size);
@@ -308,23 +342,30 @@ int main(int argc, char *argv[])
                             printf("        x_advance_percent: %f\n", x_advance_percent);
                             printf("        y_baseline_percent: %f\n", y_baseline_percent);
 
+                            vec2i font_size = vec2i((int)((float)parameters.characterSize * (float)height_scale_related_to_font_size + 0.5f));
+
                             ImageRescaler rescaler(input_image);
-                            rescaler.rescale(parameters.characterSize, parameters.characterSize);
+                            rescaler.rescale(font_size.x, font_size.y);
 
-                            auto *atlasElementFace = atlas.addElement(UInt32toStringHEX(output_char_code), parameters.characterSize, parameters.characterSize);
-                            atlasElementFace->copyFromRGBABuffer((uint8_t *)rescaler.output_image.array, parameters.characterSize * 4);
+                            auto *atlasElementFace = atlas.addElement(UInt32toStringHEX(output_char_code), font_size.x, font_size.y);
+                            atlasElementFace->copyFromRGBABuffer((uint8_t *)rescaler.output_image.array, font_size.x * 4);
 
-                            auto *atlasElementStroke = atlas.addElement(UInt32toStringHEX(output_char_code) + std::string("s"), parameters.characterSize, parameters.characterSize);
-                            atlasElementStroke->copyFromRGBABuffer((uint8_t *)blank_img.array, parameters.characterSize * 4);
+                            // auto* atlasElementStroke = atlas.addElement(UInt32toStringHEX(output_char_code) + std::string("s"), parameters.characterSize, parameters.characterSize);
+                            auto *atlasElementStroke = atlas.addElement(UInt32toStringHEX(output_char_code) + std::string("s"), 1, 1);
+                            atlasElementStroke->copyFromRGBABuffer((uint8_t *)blank_img.array, font_size.x * 4);
+
+                            float advance_x = (float)rescaler.output_image.size.x * (float)x_advance_percent;
+                            int16_t top_origin = (int16_t)((float)rescaler.output_image.size.y * (1.0f - (float)y_baseline_percent) + 0.5f);
+                            int16_t left_origin = (int16_t)((float)rescaler.output_image.size.x * (float)x_start_percent + 0.5f);
 
                             fontWriter.setCharacter(
                                 output_char_code,
-                                0,// glyph->advancex,
-                                0,// glyph->normalRect.top,
-                                0,// glyph->normalRect.left,
+                                advance_x,   // glyph->advancex,
+                                top_origin,  // glyph->normalRect.top,
+                                left_origin, // glyph->normalRect.left,
                                 atlasElementFace,
-                                0,// glyph->strokeRect.top,
-                                0,// glyph->strokeRect.left,
+                                0, // glyph->strokeRect.top,
+                                0, // glyph->strokeRect.left,
                                 atlasElementStroke);
 
                             continue;
@@ -334,7 +375,6 @@ int main(int argc, char *argv[])
                     }
 
                     printf("All Chars Inserted:\n%s\n", all_chars_inserted.c_str());
-                    
                 }
             }
         }
