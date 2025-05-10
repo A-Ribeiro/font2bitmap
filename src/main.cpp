@@ -44,11 +44,13 @@ std::u32string readUTF32fromFile(const char *filename)
 
 std::string charToUTF8_Cpp_Literal(char32_t char_code)
 {
-    std::string result = "\"";
-    char32_t char_str[2] = {char_code,0};
-    auto utf8_str = ITKCommon::StringUtil::utf32_to_utf8(char_str);
-    for (auto chr : utf8_str)
-        result += ITKCommon::PrintfToStdString("\\x%.2x", (uint8_t)chr);
+    std::string result = "u8\"";
+    // char32_t char_str[2] = {char_code,0};
+    // auto utf8_str = ITKCommon::StringUtil::utf32_to_utf8(char_str);
+    // for (auto chr : utf8_str)
+    //     result += ITKCommon::PrintfToStdString("\\x%.2x", (uint8_t)chr);
+
+    result += ITKCommon::PrintfToStdString("\\U%.8x", (uint32_t)char_code);
     result += "\"";
     return result;
 }
