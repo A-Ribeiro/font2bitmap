@@ -345,6 +345,12 @@ int main(int argc, char *argv[])
                             vec2i font_size = vec2i((int)((float)parameters.characterSize * (float)height_scale_related_to_font_size + 0.5f));
 
                             ImageRescaler rescaler(input_image);
+
+                            //fix font_size according height
+                            float scale_factor = (float)font_size.y / (float)rescaler.input_image.size.y;
+                            float width_scaled = (float)rescaler.input_image.size.x * scale_factor;
+                            font_size.x = (int32_t)(width_scaled + 0.5f);
+
                             rescaler.rescale(font_size.x, font_size.y);
 
                             auto *atlasElementFace = atlas.addElement(UInt32toStringHEX(output_char_code), font_size.x, font_size.y);
