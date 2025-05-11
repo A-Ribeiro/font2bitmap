@@ -271,19 +271,19 @@ int main(int argc, char *argv[])
         if (max_1char < 0)
             max_1char = 0;
         else
-            max_1char = std::min<int64_t>(max_1char+1, 127);
+            max_1char = std::min<int64_t>(max_1char + 1, 127);
         if (max_2chars < 0)
             max_2chars = 0x80;
         else
-            max_2chars = std::min<int64_t>(max_2chars+1, 2047);
+            max_2chars = std::min<int64_t>(max_2chars + 1, 2047);
         if (max_3chars < 0)
             max_3chars = 0x800;
         else
-            max_3chars = std::min<int64_t>(max_3chars+1, 65535);
+            max_3chars = std::min<int64_t>(max_3chars + 1, 65535);
         if (max_4chars < 0)
             max_4chars = 0x10000;
         else
-            max_4chars = std::min<int64_t>(max_4chars+1, 1114111);
+            max_4chars = std::min<int64_t>(max_4chars + 1, 1114111);
 
         // add custom character
         {
@@ -349,7 +349,7 @@ int main(int argc, char *argv[])
 
                             ImageRescaler rescaler(input_image);
 
-                            //fix font_size according height
+                            // fix font_size according height
                             float scale_factor = (float)font_size.y / (float)rescaler.input_image.size.y;
                             float width_scaled = (float)rescaler.input_image.size.x * scale_factor;
                             font_size.x = (int32_t)(width_scaled + 0.5f);
@@ -364,8 +364,8 @@ int main(int argc, char *argv[])
                             // atlasElementStroke->copyFromRGBABuffer((uint8_t *)blank_img.array, font_size.x * 4);
 
                             float advance_x = (float)rescaler.output_image.size.x * (float)x_advance_percent;
-                            int16_t top_origin = (int16_t)((float)rescaler.output_image.size.y * (1.0f - (float)y_baseline_percent) + 0.5f);
-                            int16_t left_origin = (int16_t)((float)rescaler.output_image.size.x * (float)x_start_percent + 0.5f);
+                            int16_t top_origin = (int16_t)(OP<float>::round((float)rescaler.output_image.size.y * (1.0f - (float)y_baseline_percent)));
+                            int16_t left_origin = (int16_t)(OP<float>::round(-(float)rescaler.output_image.size.x * (float)x_start_percent));
 
                             fontWriter.setCharacter(
                                 output_char_code,
@@ -383,13 +383,12 @@ int main(int argc, char *argv[])
                         printf("    reading line with no valid content: %s\n", line);
                     }
 
-                    
                     printf("\nAll Chars Inserted:\n\n"
-                        "//\n"
-                        "// Auto Generated: Exported Bitmaps inside the Font\n"
-                        "//\n"
-                        "%s\n\n"
-                        , all_chars_inserted.c_str());
+                           "//\n"
+                           "// Auto Generated: Exported Bitmaps inside the Font\n"
+                           "//\n"
+                           "%s\n\n",
+                           all_chars_inserted.c_str());
                 }
             }
         }
