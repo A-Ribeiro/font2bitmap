@@ -383,6 +383,7 @@ int main(int argc, char *argv[])
                         printf("    reading line with no valid content: %s\n", line);
                     }
 
+                    
                     printf("\nAll Chars Inserted:\n\n"
                         "//\n"
                         "// Auto Generated: Exported Bitmaps inside the Font\n"
