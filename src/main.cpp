@@ -188,7 +188,8 @@ int main(int argc, char *argv[])
                             parameters.outlineThickness,
                             parameters.characterSize,
                             parameters.characterSize);
-        float newLineHeight = (float)parameters.characterSize;
+        //float newLineHeight = (float)parameters.characterSize;
+        float newLineHeight = ft2.getNewLineHeight(false);
         float spaceWidth = (float)parameters.characterSize;
 
         ITKWrappers::FT2::FT2Glyph *glyph_white_space = ft2.generateGlyph(U' ');
@@ -322,12 +323,12 @@ int main(int argc, char *argv[])
                         if (strlen(line) == 0 || line[0] == ';')
                             continue;
 
-                        if (sscanf(line, "input_image=%s", &input_image) == 1 ||
+                        if (sscanf(line, "input_image=%s", input_image) == 1 ||
                             sscanf(line, "height_scale_related_to_font_size=%lf", &height_scale_related_to_font_size) == 1 ||
                             sscanf(line, "x_start_percent=%lf", &x_start_percent) == 1 ||
                             sscanf(line, "x_advance_percent=%lf", &x_advance_percent) == 1 ||
                             sscanf(line, "y_baseline_percent=%lf", &y_baseline_percent) == 1 ||
-                            sscanf(line, "var_name=%s", &var_name) == 1)
+                            sscanf(line, "var_name=%s", var_name) == 1)
                             continue;
                         else if (sscanf(line, "output_char_code=%u", &output_char_code) == 1)
                         {
