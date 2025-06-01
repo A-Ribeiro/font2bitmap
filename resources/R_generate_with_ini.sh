@@ -1,0 +1,14 @@
+#!/bin/sh
+
+TOOL_DIR="$(dirname "$0")"
+OUT_FILE="$(basename "$1")"
+OUT_FILE="${OUT_FILE%.*}"
+OUT_FILE="$TOOL_DIR/$OUT_FILE"
+CHARSET_FILE="$TOOL_DIR/charset.utf8"
+CUSTOM_CHARS_FILE="$TOOL_DIR/custom_chars.ini"
+EXECUTABLE="$TOOL_DIR/font2bitmap"
+
+$EXECUTABLE -i $1 -o $OUT_FILE -s 40  -c $CHARSET_FILE -p 6 -t 0.66666 -a $CUSTOM_CHARS_FILE
+$EXECUTABLE -i $1 -o $OUT_FILE -s 80  -c $CHARSET_FILE -p 6 -t 0.88888 -a $CUSTOM_CHARS_FILE
+$EXECUTABLE -i $1 -o $OUT_FILE -s 100 -c $CHARSET_FILE -p 6 -t 0.99999 -a $CUSTOM_CHARS_FILE
+

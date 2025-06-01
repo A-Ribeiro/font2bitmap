@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
                             parameters.outlineThickness,
                             parameters.characterSize,
                             parameters.characterSize);
-        //float newLineHeight = (float)parameters.characterSize;
+        // float newLineHeight = (float)parameters.characterSize;
         float newLineHeight = ft2.getNewLineHeight(false);
         float spaceWidth = (float)parameters.characterSize;
 
@@ -264,7 +264,8 @@ int main(int argc, char *argv[])
                 atlasElementFace,
                 glyph->strokeRect.top,
                 glyph->strokeRect.left,
-                atlasElementStroke);
+                atlasElementStroke,
+                glyph->contour);
 
             ft2.releaseGlyph(&glyph);
         }
@@ -368,6 +369,8 @@ int main(int argc, char *argv[])
                             int16_t top_origin = (int16_t)(OP<float>::round((float)rescaler.output_image.size.y * (1.0f - (float)y_baseline_percent)));
                             int16_t left_origin = (int16_t)(OP<float>::round(-(float)rescaler.output_image.size.x * (float)x_start_percent));
 
+                            std::vector<AlgorithmCore::Polygon::Polygon2D<MathCore::vec2f>> empty_contour;
+
                             fontWriter.setCharacter(
                                 output_char_code,
                                 advance_x,   // glyph->advancex,
@@ -376,7 +379,8 @@ int main(int argc, char *argv[])
                                 atlasElementFace,
                                 0, // glyph->strokeRect.top,
                                 0, // glyph->strokeRect.left,
-                                atlasElementStroke);
+                                atlasElementStroke,
+                                empty_contour);
 
                             continue;
                         }

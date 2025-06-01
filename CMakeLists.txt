@@ -77,6 +77,7 @@ tool_copy_file_after_build(
     resources/Roboto-Regular.ttf
     resources/custom_chars.ini
     resources/R_generate_with_ini.bat
+    resources/R_generate_with_ini.sh
 )
 
 if( NOT MSVC )
